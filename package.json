@@ -1,0 +1,30 @@
+{
+  "name": "exchange-rate-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piemekanika/exchange-rate-bot.git"
+  },
+  "keywords": [
+    "rate"
+  ],
+  "author": "piemekanika",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/piemekanika/exchange-rate-bot/issues"
+  },
+  "homepage": "https://github.com/piemekanika/exchange-rate-bot#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "fetch-jsonp": "^1.2.3",
+    "node-jsonp": "^1.0.2",
+    "node-telegram-bot-api": "^0.61.0"
+  }
+}
