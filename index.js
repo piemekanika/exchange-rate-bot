@@ -8,7 +8,7 @@ config()
 const bot = new TelegramBot(process.env.token, { polling: true })
 
 const stringifyRate = (name, origin, rate) => {
-    return `Курс *${name}* в ${origin}: \t\t\t${rate}`
+    return `Курс *${name}* в ${origin}: \t\t\t*${rate}*`
 }
 
 const reply_markup = {
