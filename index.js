@@ -7,25 +7,46 @@ config()
 
 const bot = new TelegramBot(process.env.token, { polling: true })
 
-bot.on('message', async (message) => {
+const stringifyRate = (name, origin, rate) => {
+    return `Курс *${name}* в ${origin}: \t\t\t${rate}`
+}
 
-    await bot.sendMessage(message.chat.id, 'Загрузка...')
+const reply_markup = {
+    keyboard: [['Показать курсы']],
+    resize_keyboard: true,
+}
+
+bot.on('message', async (message) => {
+    const { message_id } = await bot.sendMessage(message.chat.id, 'Загрузка...')
 
     try {
+
         const tinkoff = await getTinkoffRate()
-        const tinkoffRate = `Курс *тенге* в Тинькофф: \t\t\t*${String(tinkoff).replace('.', '\\.')}*`
+        const tinkoffRate = stringifyRate('тенге', 'Тинькофф', tinkoff)
 
         const moex = await getMoexRates()
-        const moexRates = moex.map(e => `Курс *${e.name}* мос биржа: \t\t\t*${String(e.rate).replace('.', '\\.')}*`)
+        const moexRates = moex
+            .reverse()
+            .map(e => stringifyRate(e.name, 'мос. биржа', e.rate))
 
         const rates = [
             tinkoffRate,
-            ...moexRates.reverse(),
-        ].join('\n\n')
+            ...moexRates,
+        ]
+            .join('\n\n')
+            .replaceAll('.', '\\.')
 
-        await bot.sendMessage(message.chat.id, rates, {parse_mode: 'MarkdownV2'})
+        await bot.sendMessage(message.chat.id, rates, {
+            parse_mode: 'MarkdownV2',
+            reply_markup,
+        })
+
     } catch (e) {
-        await bot.sendMessage(message.chat.id, 'Что-то пошло не так')
+        await bot.sendMessage(message.chat.id, 'Что-то пошло не так' , {
+            reply_markup,
+        })
         console.log(e)
+    } finally {
+        await bot.deleteMessage(message.chat.id, message_id)
     }
 })
